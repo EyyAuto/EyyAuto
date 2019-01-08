@@ -75,8 +75,8 @@ jobs:
             ls apk/androidTest
             sudo gcloud firebase test android run \
               --type instrumentation \
-              --app apk/app-debug.apk \
-              --test apk/app-debug-androidTest.apk \
+              --app apk/debug/app-debug.apk \
+              --test apk/androidTest/debug/app-debug-androidTest.apk \
               --device model=Nexus6,version=26,orientation=portrait \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
