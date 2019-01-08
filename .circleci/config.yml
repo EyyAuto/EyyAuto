@@ -22,9 +22,10 @@ jobs:
           name: build apks
           command: ./gradlew assembleDebug assembleDebugAndroidTest
       - persist_to_workspace:
-          root: app/build/outputs
+          root: app/build/outputs/apk/
           paths:
-            - apk
+            - debug/*.apk
+            - androidTest/debug/*.apk
 
   unit_test:
     working_directory: ~/code
@@ -70,7 +71,7 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: |
-            ls apk/debug
+            ls apk
             sudo gcloud firebase test android run \
               --type instrumentation \
               --app apk/debug/app-debug.apk \
