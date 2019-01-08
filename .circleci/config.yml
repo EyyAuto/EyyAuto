@@ -77,7 +77,7 @@ jobs:
               --type instrumentation \
               --app apk/debug/app-debug.apk \
               --test apk/androidTest/debug/app-debug-androidTest.apk \
-              --device model=Nexus6,version=26,orientation=portrait \
+              --device model=Nexus6,version=24,orientation=portrait \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
           name: Install gsutil dependency and copy test results data
