@@ -71,11 +71,11 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: |
-            ls apk
+            echo $(ls apk)
             sudo gcloud firebase test android run \
               --type instrumentation \
-              --app apk/debug/app-debug.apk \
-              --test apk/androidTest/debug/app-debug-androidTest.apk \
+              --app apk/app-debug.apk \
+              --test apk/app-debug-androidTest.apk \
               --device model=Nexus6,version=26,orientation=portrait \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
