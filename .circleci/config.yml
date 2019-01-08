@@ -71,7 +71,8 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: |
-            echo $(ls apk)
+            ls apk/debug
+            ls apk/androidTest
             sudo gcloud firebase test android run \
               --type instrumentation \
               --app apk/app-debug.apk \
