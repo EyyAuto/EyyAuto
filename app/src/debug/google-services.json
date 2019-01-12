@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "472553057337",
-    "firebase_url": "https://test-a1885.firebaseio.com",
-    "project_id": "test-a1885",
-    "storage_bucket": "test-a1885.appspot.com"
+    "project_number": "656195522160",
+    "firebase_url": "https://eyyauto.firebaseio.com",
+    "project_id": "eyyauto",
+    "storage_bucket": "eyyauto.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:472553057337:android:07b83e7265aa5fd9",
+        "mobilesdk_app_id": "1:656195522160:android:07b83e7265aa5fd9",
         "android_client_info": {
           "package_name": "in.ac.nitc.eyyauto"
         }
       },
       "oauth_client": [
         {
-          "client_id": "472553057337-u7p9acun1prv4ame7fu2nq9m2lq2p0f1.apps.googleusercontent.com",
+          "client_id": "656195522160-4g5sf4r8eicf5pj0kq8e8mi1ikuv0fvg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "in.ac.nitc.eyyauto",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "472553057337-epd80sk71ghcmce4vl8l65jvo3l3q9lk.apps.googleusercontent.com",
+          "client_id": "656195522160-6bdvacpc1dtnbhqh3gigsva5c79jesa7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBAw_AcKYTtCIWdehzm72MvRWobXySy_R8"
+          "current_key": "AIzaSyClmz9wXKxtjfhuzyd0pXsATVmhPsTxQQs"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "472553057337-epd80sk71ghcmce4vl8l65jvo3l3q9lk.apps.googleusercontent.com",
+              "client_id": "656195522160-6bdvacpc1dtnbhqh3gigsva5c79jesa7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

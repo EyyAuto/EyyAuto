@@ -3,6 +3,7 @@
 *.jks
 *.apk
 *.aab
+google-services.json
 /local.properties
 /.idea/caches
 /.idea/libraries
