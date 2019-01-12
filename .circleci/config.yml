@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Get google-services.json
-        command: |
-          mkdir -p app/src/debug
-          echo $GOOGLE_SERVICES_JSON > app/src/debug/google-services.json
+          name: Get google-services.json
+          command: |
+            mkdir -p app/src/debug
+            echo $GOOGLE_SERVICES_JSON > app/src/debug/google-services.json
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
