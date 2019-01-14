@@ -85,7 +85,11 @@ jobs:
               --type instrumentation \
               --app apk/debug/app-debug.apk \
               --test apk/androidTest/debug/app-debug-androidTest.apk \
-              --device model=Nexus6,version=24,orientation=portrait \
+              --device model=shamu,version=21,orientation=portrait \
+              --device model=shamu,version=22,orientation=portrait \
+              --device model=shamu,version=23,orientation=portrait \
+              --device model=sailfish,version=25,orientation=portrait \
+              --device model=sailfish,version=26,orientation=portrait \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
 
 workflows:
@@ -100,3 +104,8 @@ workflows:
       - firebase_test:
           requires:
             - build
+          filters:
+            branches:
+              only:
+              - master
+              - testing
