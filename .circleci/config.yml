@@ -85,12 +85,19 @@ jobs:
               --type instrumentation \
               --app apk/debug/app-debug.apk \
               --test apk/androidTest/debug/app-debug-androidTest.apk \
-              --device model=shamu,version=21,orientation=portrait \
-              --device model=shamu,version=22,orientation=portrait \
-              --device model=shamu,version=23,orientation=portrait \
-              --device model=sailfish,version=25,orientation=portrait \
-              --device model=sailfish,version=26,orientation=portrait \
-              --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+              --device model=Nexus6,version=23,orientation=portrait \
+              --device model=Nexus6,version=24,orientation=potrait \
+              --device model=Nexus6,version=25,orientation=portrait \
+              --device model=sailfish,version=26,orientation=portrait
+      - run:
+          name: Install gsutil dependency and copy test results data
+          command: |
+            mkdir -p firebase
+            sudo pip install -U crcmod
+            sudo gsutil -m cp -r -U `sudo gsutil ls gs://test-lab-fbam099tx55hs-iixxcrt21m42m | tail -1` ~/code/firebase/ | true
+      - store_artifacts:
+          path: firebase/
+          destination: results
 
 workflows:
   version: 2
