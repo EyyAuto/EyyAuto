@@ -34,3 +34,29 @@ Note:
   
   https://android-developers.googleblog.com/2015/06/an-update-on-eclipse-android-developer.html
   
+# Reference
+
+## Database Structure
+
+This app uses Firebase Real-Time Database and has the following structure:
+
+![](https://github.com/EyyAuto/EyyAuto/blob/master/database.png)
+
+### Description:
+
+The database has 4 distinct parts namely, _User Info_, _Driver Info_, _Real Time Driver Location_ and _Requests_.
+
+The _User Info_ Section contains basic user information such as name and phone number (at least) and other
+shareable information needed for proper functionality.
+This section is expected to be static i.e., data changes very rarely, if ever.
+
+The _Driver Info_ section is analogous to the _User Info_ section for drivers and has the same features.
+
+The _Real Time Driver Location_ section contains the real time location data of the driver stored in a format
+consistent with the GeoFire API.
+This section is expected to be very volatile.
+
+And finally we have the _Requests_ section. It contains information about pending requests sent by the users.
+Drivers will be automatically assigned to a pending request once they choose to accept requests.
+The information stored here includes driver id, user id, pick up location and drop off location.
+This section is expected to be moderately volatile.
