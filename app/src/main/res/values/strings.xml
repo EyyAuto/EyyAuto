@@ -4,4 +4,8 @@
     <string name="registration_name">Name</string>
     <string name="registration_error">Please enter your name</string>
 
+    <string name="sign_in">Sign In with Google</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="map_title">Map Activity</string>
+    <string name="open_map">Open Map</string>
 </resources>
