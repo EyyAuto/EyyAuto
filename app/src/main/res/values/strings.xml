@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EyyAuto</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="registration_name">Name</string>
+    <string name="registration_error">Please enter your name</string>
+
 </resources>
