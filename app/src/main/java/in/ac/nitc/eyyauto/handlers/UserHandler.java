@@ -10,14 +10,9 @@ import static in.ac.nitc.eyyauto.Constants.USER_INFO_ROOT_PATH;
 
 public final class UserHandler extends DatabaseHandler {
     private static final Class<?> type = User.class;
+    private Event<User> event;
 
-    public interface Event extends BaseEvent {
-        void onReceive(User user);
-    }
-
-    private Event event;
-
-    public void get(@NonNull String uid, @NonNull Event event) {
+    public void get(@NonNull String uid, @NonNull Event<User> event) {
         String path = USER_INFO_ROOT_PATH + uid;
         this.event = event;
         getDataOnce(path, type);
