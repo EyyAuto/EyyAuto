@@ -1,31 +1,31 @@
 package in.ac.nitc.eyyauto.models;
 
 public class User {
-    private String UID;
-    private ShareableInfo info;
+    private String Name;
+    private String Contact;
 
     // Required according to firebase documentation https://firebase.google.com/docs/database/android/read-and-write
     public User() {
     }
 
-    public User(String UID, ShareableInfo info) {
-        this.UID = UID;
-        this.info = info;
+    public User(String name, String contact) {
+        Name = name;
+        Contact = contact;
     }
 
-    public void setInfo(ShareableInfo info) {
-        this.info = info;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setContact(String contact) {
+        Contact = contact;
     }
 
-    public String getUID() {
-        return UID;
+    public String getName() {
+        return Name;
     }
 
-    public ShareableInfo getInfo() {
-        return info;
+    public String getContact() {
+        return Contact;
     }
 }

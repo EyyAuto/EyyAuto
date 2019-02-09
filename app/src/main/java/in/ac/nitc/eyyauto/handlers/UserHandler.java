@@ -6,8 +6,9 @@ import com.google.firebase.database.DatabaseError;
 
 import in.ac.nitc.eyyauto.models.User;
 
+import static in.ac.nitc.eyyauto.Constants.USER_INFO_ROOT_PATH;
+
 public final class UserHandler extends DatabaseHandler {
-    private static final String USER_ROOT_PATH = "EyyAuto/Users/";
     private static final Class<?> type = User.class;
 
     public interface Event extends BaseEvent {
@@ -17,7 +18,7 @@ public final class UserHandler extends DatabaseHandler {
     private Event event;
 
     public void get(@NonNull String uid, @NonNull Event event) {
-        String path = USER_ROOT_PATH + uid;
+        String path = USER_INFO_ROOT_PATH + uid;
         this.event = event;
         getDataOnce(path, type);
     }
