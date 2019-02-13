@@ -5,11 +5,7 @@
 *.aab
 google-services.json
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/misc.xml
+.idea
 .DS_Store
 /build
 /captures

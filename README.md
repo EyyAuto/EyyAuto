@@ -60,3 +60,30 @@ And finally we have the _Requests_ section. It contains information about pendin
 Drivers will be automatically assigned to a pending request once they choose to accept requests.
 The information stored here includes driver id, user id, pick up location and drop off location.
 This section is expected to be moderately volatile.
+
+## Workflow
+
+The workflow to be followed will be as described in the following reference:
+https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project
+
+**TL;DR**:
+1. Create a new topic branch and push commits.
+2. Create a Pull Request to Propose changes.
+3. Changes will be reviewed by peers.
+4. Modifications made to the PR if necessary.
+5. Resolve merge conflicts by merging changes from master onto the topic branch
+6. Merge branch once A-OK.
+
+Specifically for this project, we have two protected branches: master and testing.
+_master_ is intended to contain the latest stable code and needs no explanation.
+
+_testing_ is used for the following:
+1. As a base branch to any new topic branches.
+2. To contain the latest working code, but not UI tested in firebase test lab nor real world scenarios.
+
+As firebase test lab is a resource that needs to be managed, it is uneconomical as well as unnecessary
+for every topic branch to be tested on test lab. It is a much better practice to find problems at the
+source level first.
+
+Naturally, Pull Requests from topic branches must be created against _testing_ branch only.
+Only on futher testing will _testing_ then be merged onto _master_.
