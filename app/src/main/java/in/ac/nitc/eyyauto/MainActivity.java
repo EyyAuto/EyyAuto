@@ -3,6 +3,10 @@ package in.ac.nitc.eyyauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -10,39 +14,36 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.Arrays;
+
+import in.ac.nitc.eyyauto.handlers.Event;
+import in.ac.nitc.eyyauto.handlers.UserHandler;
+import in.ac.nitc.eyyauto.models.User;
 
 public class MainActivity extends AppCompatActivity {
 
     private static int RC_SIGN_IN = 123;
-
     private FirebaseUser mUser;
+    private UserHandler mUserHandler;
+
+    private Button mConfirm;
+    private EditText mNameField;
+    private String mUserId;
+    private String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (isPhoneRegistered()) {
-            Intent intent = new Intent(this, GetName.class);
-            startActivity(intent);
-            finish();
-        }
-        else {
+        // set view according to need
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            setContentView(R.layout.activity_main);
             signIn();
+        } else {
+            setDetailsView();
         }
-    }
-
-    private boolean isPhoneRegistered() {
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mUser != null) {
-            if(mUser.getPhoneNumber() != null) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
     }
 
     private void signIn() {
@@ -63,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                Intent intent = new Intent(this, GetName.class);
-                startActivity(intent);
-                finish();
+                setDetailsView();
             } else {
                 if (response == null) {
                     Toast.makeText(this, "Sign in Cancelled", Toast.LENGTH_SHORT).show();
@@ -80,4 +79,54 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void setDetailsView() {
+        setContentView(R.layout.personal_details);
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUserHandler = new UserHandler();
+        mConfirm = findViewById(R.id.confirm);
+        mNameField = findViewById(R.id.name);
+
+        if (mUser != null) {
+            populateFields();
+            mConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveUserInformation();
+                }
+            });
+        } else {
+            Log.d("NULL_error", "mUser is null in details page.");
+        }
+    }
+
+    private void populateFields() {
+        mUserId = mUser.getUid();
+        mUserHandler.readOnce(mUserId, new Event<User>() {
+            @Override
+            public void onReceive(User data) {
+                if (data != null) {
+                    mNameField.setText(data.getName());
+                }
+            }
+
+            @Override
+            public void onFailed(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void saveUserInformation() {
+        mName = mNameField.getText().toString();
+
+        if (mName.isEmpty()) {
+            Toast.makeText(this, R.string.registration_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mUserHandler.putValue(mUserId, new User(mName, mUser.getPhoneNumber()));
+
+        Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
+    }
+
 }
