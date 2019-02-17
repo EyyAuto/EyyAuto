@@ -1,7 +1,6 @@
 package in.ac.nitc.eyyauto;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -10,18 +9,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import static in.ac.nitc.eyyauto.Constants.USER_INFO_ROOT_PATH;
+import in.ac.nitc.eyyauto.handlers.Event;
+import in.ac.nitc.eyyauto.handlers.UserHandler;
+import in.ac.nitc.eyyauto.models.User;
 
 public class GetName extends AppCompatActivity {
 
     private FirebaseUser mUser;
-    private DatabaseReference mRef;
+    private static UserHandler mUserHandler = new UserHandler();
 
     private Button mConfirm;
     private EditText mNameField;
@@ -52,18 +49,16 @@ public class GetName extends AppCompatActivity {
 
     private void populateFields() {
         mUserId = mUser.getUid();
-        String path = USER_INFO_ROOT_PATH + mUserId + "/Name";
-        mRef = FirebaseDatabase.getInstance().getReference(path);
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserHandler.readOnce(mUserId, new Event<User>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    mNameField.setText(dataSnapshot.getValue().toString());
+            public void onReceive(User data) {
+                if (data != null) {
+                    mNameField.setText(data.getName());
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onFailed(DatabaseError databaseError) {
 
             }
         });
@@ -76,8 +71,6 @@ public class GetName extends AppCompatActivity {
             Toast.makeText(GetName.this, R.string.registration_error, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        mRef.setValue(mName);
 
         Toast.makeText(GetName.this, "Registered successfully", Toast.LENGTH_SHORT).show();
     }

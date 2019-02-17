@@ -5,16 +5,17 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.ParameterizedType;
 
 public abstract class DatabaseHandler<T> {
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    @SuppressWarnings("unchecked")
+    private final Class<T> classType = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
     private void processResponse(@NonNull DataSnapshot dataSnapshot, @NonNull Event<T> event) {
-        GenericTypeIndicator<T> t = new GenericTypeIndicator<T>() {
-        };
-        T data = dataSnapshot.getValue(t);
+        T data = dataSnapshot.getValue(classType);
         event.onReceive(data);
     }
 
