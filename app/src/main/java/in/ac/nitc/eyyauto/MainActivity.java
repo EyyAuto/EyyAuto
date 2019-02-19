@@ -14,11 +14,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.Arrays;
 
-import in.ac.nitc.eyyauto.handlers.Event;
 import in.ac.nitc.eyyauto.handlers.UserHandler;
 import in.ac.nitc.eyyauto.models.User;
 
@@ -32,13 +30,16 @@ public class MainActivity extends AppCompatActivity {
     private EditText mNameField;
     private String mUserId;
     private String mName;
+    private Boolean hasPhoneNumber;
+    private User mUserObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // set view according to need
-        Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        hasPhoneNumber = getIntent().getBooleanExtra("hasPhoneNumber", false);
+        mUserObject = (User)getIntent().getSerializableExtra("userObject");
+        if(hasPhoneNumber == false) {
             setContentView(R.layout.activity_main);
             signIn();
         } else {
@@ -102,19 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateFields() {
         mUserId = mUser.getUid();
-        mUserHandler.readOnce(mUserId, new Event<User>() {
-            @Override
-            public void onReceive(User data) {
-                if (data != null) {
-                    mNameField.setText(data.getName());
-                }
-            }
-
-            @Override
-            public void onFailed(DatabaseError databaseError) {
-
-            }
-        });
+        mNameField.setText(mUserObject.getName());
     }
 
     private void saveUserInformation() {

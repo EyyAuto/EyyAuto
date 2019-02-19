@@ -3,6 +3,7 @@ package in.ac.nitc.eyyauto;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -18,7 +19,6 @@ import in.ac.nitc.eyyauto.models.User;
 public class SplashActivity extends AppCompatActivity {
 
     private FirebaseUser mUser;
-    private DatabaseReference mRef;
     String mUserId;
 
     @Override
@@ -27,10 +27,13 @@ public class SplashActivity extends AppCompatActivity {
         // Remove the Title Bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         redirectUser();
-//        finish();
     }
 
     private void redirectUser() {
@@ -48,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                     } else {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                         intent.putExtra("hasPhoneNumber", true);
+                        intent.putExtra("userObject", data);
                         startActivity(intent);
                         finish();
                     }
