@@ -14,11 +14,16 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.Arrays;
 
+import in.ac.nitc.eyyauto.handlers.Event;
 import in.ac.nitc.eyyauto.handlers.UserHandler;
 import in.ac.nitc.eyyauto.models.User;
+
+import static in.ac.nitc.eyyauto.Constants.INTENT_HAS_PHONE_NUMBER;
+import static in.ac.nitc.eyyauto.Constants.INTENT_USER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,17 +34,16 @@ public class MainActivity extends AppCompatActivity {
     private Button mConfirm;
     private EditText mNameField;
     private String mUserId;
-    private String mName;
     private Boolean hasPhoneNumber;
-    private User mUserObject;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // set view according to need
-        hasPhoneNumber = getIntent().getBooleanExtra("hasPhoneNumber", false);
-        mUserObject = (User)getIntent().getSerializableExtra("userObject");
-        if(hasPhoneNumber == false) {
+        hasPhoneNumber = getIntent().getBooleanExtra(INTENT_HAS_PHONE_NUMBER, false);
+        mUserHandler = new UserHandler();
+        if(!hasPhoneNumber) {
             setContentView(R.layout.activity_main);
             signIn();
         } else {
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn() {
+        //TODO: Custom theme for FirebaseUI here
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -84,38 +89,27 @@ public class MainActivity extends AppCompatActivity {
     private void setDetailsView() {
         setContentView(R.layout.personal_details);
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUserHandler = new UserHandler();
+        mUserId = mUser.getUid();
         mConfirm = findViewById(R.id.confirm);
         mNameField = findViewById(R.id.name);
-
-        if (mUser != null) {
-            populateFields();
-            mConfirm.setOnClickListener(new View.OnClickListener() {
+        mConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saveUserInformation();
                 }
             });
-        } else {
-            Log.d("NULL_error", "mUser is null in details page.");
-        }
-    }
-
-    private void populateFields() {
-        mUserId = mUser.getUid();
-        mNameField.setText(mUserObject.getName());
     }
 
     private void saveUserInformation() {
-        mName = mNameField.getText().toString();
-
+        String mName = mNameField.getText().toString();
         if (mName.isEmpty()) {
             Toast.makeText(this, R.string.registration_error, Toast.LENGTH_SHORT).show();
             return;
         }
-        mUserHandler.putValue(mUserId, new User(mName, mUser.getPhoneNumber()));
-
+        user = new User(mName, mUser.getPhoneNumber());
+        mUserHandler.putValue(mUserId, user);
         Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
+        // TODO: switch to maps activity here
+        finish();
     }
-
 }

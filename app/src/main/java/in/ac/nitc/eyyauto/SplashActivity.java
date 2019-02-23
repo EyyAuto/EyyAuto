@@ -3,18 +3,19 @@ package in.ac.nitc.eyyauto;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 
 import in.ac.nitc.eyyauto.handlers.Event;
 import in.ac.nitc.eyyauto.handlers.UserHandler;
 import in.ac.nitc.eyyauto.models.User;
+
+import static in.ac.nitc.eyyauto.Constants.INTENT_HAS_PHONE_NUMBER;
+import static in.ac.nitc.eyyauto.Constants.INTENT_USER;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -26,13 +27,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Remove the Title Bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         setContentView(R.layout.activity_splash);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
         redirectUser();
     }
 
@@ -47,11 +48,11 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onReceive(User data) {
                     if (data != null) {
+                        //TODO: redirect to map activity with user profile setup
                         Toast.makeText(SplashActivity.this, "Registration was already done", Toast.LENGTH_LONG).show();
                     } else {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        intent.putExtra("hasPhoneNumber", true);
-                        intent.putExtra("userObject", data);
+                        intent.putExtra(INTENT_HAS_PHONE_NUMBER, true);
                         startActivity(intent);
                         finish();
                     }
