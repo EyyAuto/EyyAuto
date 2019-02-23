@@ -13,13 +13,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/button"
-            style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/common_google_signin_btn_icon_light_normal"
-            android:text="@string/fui_sign_in_with_google" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

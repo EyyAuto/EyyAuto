@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-26-alpha
+    - image: circleci/android:api-28-alpha
     steps:
       - checkout
       - run:
@@ -35,7 +35,7 @@ jobs:
   unit_test:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-26-alpha
+    - image: circleci/android:api-28-alpha
     steps:
       - checkout
       - run:
@@ -65,7 +65,7 @@ jobs:
   firebase_test:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-26-alpha
+    - image: circleci/android:api-28-alpha
     steps:
       - attach_workspace:
           at: apk
@@ -88,7 +88,7 @@ jobs:
               --device model=Nexus6,version=23,orientation=portrait \
               --device model=Nexus6,version=24,orientation=potrait \
               --device model=Nexus6,version=25,orientation=portrait \
-              --device model=sailfish,version=26,orientation=portrait
+              --device model=sailfish,version=28,orientation=portrait
       - run:
           name: Install gsutil dependency and copy test results data
           command: |
