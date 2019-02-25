@@ -21,11 +21,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import in.ac.nitc.eyyauto.models.User;
+
+import static in.ac.nitc.eyyauto.Constants.INTENT_USER;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+
+    private static final String TAG = "MapActivity";
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private Boolean mLocationPermissionsGranted = false;
+    private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static final float DEFAULT_ZOOM = 15f;
+    private User user;
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
+        if(user!=null)
+            Toast.makeText(this, "Signed in  as "+user.getName()+"\n"+user.getContact(), Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "User details are NULL", Toast.LENGTH_SHORT).show();
+
+
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
@@ -39,25 +61,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(true);
 
         }
 
     }
 
-    private static final String TAG = "MapActivity";
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private Boolean mLocationPermissionsGranted = false;
-    private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private static final float DEFAULT_ZOOM = 15f;
+
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        user = (User) getIntent().getExtras().get(INTENT_USER);
+
         setContentView(R.layout.activity_map);
 
         getLocationPermission();

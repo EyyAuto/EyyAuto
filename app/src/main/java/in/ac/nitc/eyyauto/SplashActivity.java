@@ -48,8 +48,12 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onReceive(User data) {
                     if (data != null) {
-                        //TODO: redirect to map activity with user profile setup
+                        //redirect to map activity with user profile setup
+                        Intent i = new Intent(SplashActivity.this,MapActivity.class);
+                        i.putExtra(INTENT_USER,data);
+                        startActivity(i);
                         Toast.makeText(SplashActivity.this, "Registration was already done", Toast.LENGTH_LONG).show();
+                        finish();
                     } else {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                         intent.putExtra(INTENT_HAS_PHONE_NUMBER, true);

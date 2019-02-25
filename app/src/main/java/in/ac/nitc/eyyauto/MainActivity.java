@@ -20,6 +20,7 @@ import in.ac.nitc.eyyauto.handlers.UserHandler;
 import in.ac.nitc.eyyauto.models.User;
 
 import static in.ac.nitc.eyyauto.Constants.INTENT_HAS_PHONE_NUMBER;
+import static in.ac.nitc.eyyauto.Constants.INTENT_USER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
         user = new User(mName, mUser.getPhoneNumber());
         mUserHandler.putValue(mUserId, user);
         Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
-        // TODO: switch to maps activity here
+        // switch to maps activity here
+        Intent i = new Intent(MainActivity.this,MapActivity.class);
+        i.putExtra(INTENT_USER,user);
+        startActivity(i);
         finish();
     }
 }
