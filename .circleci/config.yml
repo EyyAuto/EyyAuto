@@ -86,7 +86,7 @@ jobs:
               --app apk/debug/app-debug.apk \
               --test apk/androidTest/debug/app-debug-androidTest.apk \
               --device model=Nexus6,version=23,orientation=portrait \
-              --device model=Nexus6,version=24,orientation=potrait \
+              --device model=Nexus6,version=24,orientation=portrait \
               --device model=Nexus6,version=25,orientation=portrait \
               --device model=sailfish,version=28,orientation=portrait
       - run:
