@@ -3,7 +3,6 @@ package in.ac.nitc.eyyauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,11 +13,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.Arrays;
 
-import in.ac.nitc.eyyauto.handlers.Event;
 import in.ac.nitc.eyyauto.handlers.UserHandler;
 import in.ac.nitc.eyyauto.models.User;
 
@@ -109,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
         user = new User(mName, mUser.getPhoneNumber());
         mUserHandler.putValue(mUserId, user);
         Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show();
-        // TODO: switch to maps activity here
+        // switch to maps activity here
+        Intent i = new Intent(MainActivity.this,MapActivity.class);
+        i.putExtra(INTENT_USER,user);
+        startActivity(i);
         finish();
     }
 }
