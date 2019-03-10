@@ -46,6 +46,8 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".MapActivity"
             android:label="@string/map_title"></activity>
+        <activity android:name=".ProfileActivity"
+            android:label="@string/nav_profile"></activity>
     </application>
 
 </manifest>
