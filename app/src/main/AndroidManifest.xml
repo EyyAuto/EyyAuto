@@ -47,7 +47,13 @@
         <activity android:name=".MapActivity"
             android:label="@string/map_title"></activity>
         <activity android:name=".ProfileActivity"
-            android:label="@string/nav_profile"></activity>
+            android:label="@string/nav_profile"
+            android:parentActivityName=".MapActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MapActivity"
+                ></meta-data>
+        </activity>
     </application>
 
 </manifest>

@@ -51,7 +51,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
-    private User user;
+    private User user = null;
 
     private DrawerLayout drawerLayout;
 
@@ -115,11 +115,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        // set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // close drawer when item is tapped
                         drawerLayout.closeDrawers();
-
                         displayScreen(menuItem.getItemId());
                         return true;
                     }
@@ -148,20 +144,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+
     private void displayScreen(int itemId){
         Log.d(TAG, "displayScreen: new Activity");
         switch (itemId) {
             case R.id.nav_profile:
                 Intent i = new Intent(MapActivity.this,ProfileActivity.class);
                 i.putExtra(INTENT_USER,user);
-                startActivity(i);
-                finish();
+                startActivityForResult(i, 1);
                 break;
-            case R.id.nav_map:
+            default:
                 break;
         }
-
     }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

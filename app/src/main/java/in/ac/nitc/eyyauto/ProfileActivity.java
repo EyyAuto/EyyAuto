@@ -1,21 +1,16 @@
 package in.ac.nitc.eyyauto;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +34,6 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mNameField;
     private String mUserId;
 
-    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -50,11 +44,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         user = (User) getIntent().getExtras().get(INTENT_USER);
         mUserHandler = new UserHandler();
         setDetailsView();
-        setNavDrawer(user);
     }
 
     private void setDetailsView() {
@@ -88,73 +82,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    private void setNavDrawer(User user){
-        Log.d(TAG, "setNavDrawer: setting name " + user.getName());
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
-        View header = navigationView.getHeaderView(0);
-        TextView nameView = (TextView)header.findViewById(R.id.nav_name);
-        nameView.setText(user.getName());
-
-
-        drawerLayout = findViewById(R.id.drawer_layout2);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true); // set item as selected to persist highlight
-                        drawerLayout.closeDrawers();
-
-                        displayMap(menuItem.getItemId());
-                        return true;
-                    }
-                });
-
-        ImageButton uiMode= (ImageButton) header.findViewById(R.id.ui_mode);
-        uiMode.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                switch(AppCompatDelegate.getDefaultNightMode()) {
-                    // do stuff
-                    case AppCompatDelegate.MODE_NIGHT_NO:
-                        AppCompatDelegate
-                            .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        break;
-                    case AppCompatDelegate.MODE_NIGHT_YES:
-                        AppCompatDelegate
-                            .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        break;
-                    default:
-                        AppCompatDelegate
-                            .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        break;
-                }
-                recreate();
-            }
-        });
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
+                Intent i = new Intent(ProfileActivity.this, MapActivity.class);
+                i.putExtra(INTENT_USER,user);
+                setResult(Activity.RESULT_OK,i);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void displayMap(int itemId){
-        Log.d(TAG, "displayScreen: new Activity");
-        switch (itemId) {
-            case R.id.nav_profile:
-                break;
-            case R.id.nav_map:
-                Intent i = new Intent(ProfileActivity.this,MapActivity.class);
-                i.putExtra(INTENT_USER,user);
-                startActivity(i);
-                finish();
-                break;
-        }
-
-    }
 }
