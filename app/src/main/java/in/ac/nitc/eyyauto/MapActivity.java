@@ -1,14 +1,23 @@
 package in.ac.nitc.eyyauto;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -36,8 +46,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
-    private User user;
+    private User user = null;
 
+    private DrawerLayout drawerLayout;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -50,7 +61,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
-
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json);
+            mMap.setMapStyle(style);
+        }
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -67,21 +81,87 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.AppThemeDark);
+        }
         super.onCreate(savedInstanceState);
 
         user = (User) getIntent().getExtras().get(INTENT_USER);
 
         setContentView(R.layout.activity_map);
-
         getLocationPermission();
+
+        setNavDrawer(user);
     }
 
+    private void setNavDrawer(User user){
+        Log.d(TAG, "setNavDrawer: setting name " + user.getName());
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        TextView nameView = (TextView)header.findViewById(R.id.nav_name);
+        nameView.setText(user.getName());
+
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        drawerLayout.closeDrawers();
+                        displayScreen(menuItem.getItemId());
+                        return true;
+                    }
+                });
+        ImageButton uiMode = (ImageButton) header.findViewById(R.id.ui_mode);
+        uiMode.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                switch(AppCompatDelegate.getDefaultNightMode()) {
+                    // do stuff
+                    case AppCompatDelegate.MODE_NIGHT_NO:
+                        AppCompatDelegate
+                                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        break;
+                    case AppCompatDelegate.MODE_NIGHT_YES:
+                        AppCompatDelegate
+                                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        break;
+                    default:
+                        AppCompatDelegate
+                                .setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        break;
+                }
+                recreate();
+            }
+        });
+    }
+
+    private void displayScreen(int itemId){
+        Log.d(TAG, "displayScreen: new Activity");
+        switch (itemId) {
+            case R.id.nav_profile:
+                Intent i = new Intent(MapActivity.this,ProfileActivity.class);
+                i.putExtra(INTENT_USER,user);
+                startActivity(i);
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void initMap(){
         Log.d(TAG, "initMap: initializing map");
@@ -89,9 +169,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mapFragment.getMapAsync(MapActivity.this);
     }
-
-
-
 
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
@@ -116,7 +193,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             else{
                                 Log.d(TAG, "onComplete: current location is null gps not enabled");
                                 Toast.makeText(MapActivity.this, "gps not enabled:unable to get current location", Toast.LENGTH_SHORT).show();
-
+                                moveCamera(new LatLng(11.3215791,75.9336359), 16f);
                             }
 
                         }else{
@@ -135,8 +212,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
-
-
 
 
     private void getLocationPermission(){
@@ -163,7 +238,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult: called.");
@@ -187,6 +261,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
-
 }
