@@ -1,10 +1,7 @@
 package in.ac.nitc.eyyauto;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
@@ -65,13 +62,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     private void saveUserInformation() {
         String mName = mNameField.getText().toString();
         if (mName.isEmpty()) {
             Toast.makeText(this, R.string.registration_error, Toast.LENGTH_SHORT).show();
             return;
         }
-        user = new User(mName, mUser.getPhoneNumber());
+        user.setName(mName);
         mUserHandler.putValue(mUserId, user);
         Toast.makeText(this, "Updated profile successfully", Toast.LENGTH_SHORT).show();
         // switch to maps activity here
@@ -89,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
             case android.R.id.home:
                 Intent i = new Intent(ProfileActivity.this, MapActivity.class);
                 i.putExtra(INTENT_USER,user);
-                setResult(Activity.RESULT_OK,i);
+                startActivity(i);
                 finish();
                 return true;
         }
