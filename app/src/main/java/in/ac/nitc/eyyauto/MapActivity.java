@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +31,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+
+import java.util.Arrays;
 
 import in.ac.nitc.eyyauto.models.User;
 
@@ -95,6 +103,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationPermission();
 
         setNavDrawer(user);
+
+        final TextView txtVw = findViewById(R.id.placeName);
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
+        }
+
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        //TODO make these lat.long constants for NITC
+        autocompleteFragment.setLocationRestriction(RectangularBounds.newInstance(
+                new LatLng(11.3215791-.05, 75.9336359-.05),
+                new LatLng(11.3215791+.05, 75.9336359+.05)));
+
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                txtVw.setText("Use for request: " + place.getLatLng());
+            }
+            @Override
+            public void onError(Status status) {
+                txtVw.setText(status.toString());
+            }
+        });
     }
 
     private void setNavDrawer(User user){
