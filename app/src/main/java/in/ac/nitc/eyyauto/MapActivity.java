@@ -103,33 +103,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationPermission();
 
         setNavDrawer(user);
+        searchBarInit();
 
+    }
+
+    private void searchBarInit(){
         final TextView txtVw = findViewById(R.id.placeName);
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         }
 
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        AutocompleteSupportFragment autocompleteFragmentFrom = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_from);
 
+        autocompleteFragmentFrom.setHint("Pickup Location");
         //TODO make these lat.long constants for NITC
-        autocompleteFragment.setLocationRestriction(RectangularBounds.newInstance(
+        autocompleteFragmentFrom.setLocationRestriction(RectangularBounds.newInstance(
                 new LatLng(11.3215791-.05, 75.9336359-.05),
                 new LatLng(11.3215791+.05, 75.9336359+.05)));
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
+        autocompleteFragmentFrom.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
 
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        autocompleteFragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                txtVw.setText("Use for request: " + place.getLatLng());
+                txtVw.setText("From: " + place.getLatLng());
             }
             @Override
             public void onError(Status status) {
                 txtVw.setText(status.toString());
             }
         });
+        AutocompleteSupportFragment autocompleteFragmentTo = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_to);
+
+        autocompleteFragmentTo.setHint("Drop-off Location");
+        //TODO make these lat.long constants for NITC
+        autocompleteFragmentTo.setLocationRestriction(RectangularBounds.newInstance(
+                new LatLng(11.3215791-.05, 75.9336359-.05),
+                new LatLng(11.3215791+.05, 75.9336359+.05)));
+
+        autocompleteFragmentTo.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
+        autocompleteFragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                txtVw.setText(txtVw.getText()+"\nTo:" + place.getLatLng());
+            }
+            @Override
+            public void onError(Status status) {
+                txtVw.setText(status.toString());
+            }
+        });
+
     }
 
     private void setNavDrawer(User user){
