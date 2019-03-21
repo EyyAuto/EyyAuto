@@ -9,10 +9,10 @@
     android:gravity="bottom">
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="36dp"
         android:id="@+id/ui_mode"
-        android:background="@drawable/auto_yellow"
+        android:background="@drawable/icon"
         android:text="Dark Mode"/>
     <TextView
         android:layout_width="match_parent"
