@@ -16,7 +16,9 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private DrawerLayout drawerLayout;
 
+    private ImageView mGps;
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
@@ -98,6 +103,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
 
         user = (User) getIntent().getExtras().get(INTENT_USER);
+        mGps = (ImageView) findViewById(R.id.ic_gps);
 
         setContentView(R.layout.activity_map);
         getLocationPermission();
