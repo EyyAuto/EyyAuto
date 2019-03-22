@@ -38,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -158,6 +159,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onPlaceSelected(Place place) {
                 txtVw.setText("From: " + place.getLatLng());
+
+                MarkerOptions options = new MarkerOptions()
+                        .position(place.getLatLng())
+                        .title(place.getAddress());
+                mMap.addMarker(options);
             }
             @Override
             public void onError(Status status) {
@@ -178,6 +184,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onPlaceSelected(Place place) {
                 txtVw.setText(txtVw.getText()+"\nTo:" + place.getLatLng());
+
+                MarkerOptions options = new MarkerOptions()
+                        .position(place.getLatLng())
+                        .title(place.getAddress());
+                mMap.addMarker(options);
             }
             @Override
             public void onError(Status status) {
