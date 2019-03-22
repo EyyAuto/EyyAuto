@@ -128,6 +128,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
         //initializing the custom gps button
+        mGps = (ImageView) findViewById(R.id.ic_gps);
         mGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
