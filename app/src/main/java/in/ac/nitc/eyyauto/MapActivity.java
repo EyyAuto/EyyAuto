@@ -168,8 +168,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
-                        .title(place.getAddress());
+                        .title(place.getName())
+                        .snippet("Pickup From Here");
                 pickUpMarker = mMap.addMarker(options);
+
+                pickUpMarker.showInfoWindow();
             }
             @Override
             public void onError(Status status) {
@@ -206,8 +209,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
-                        .title(place.getAddress());
+                        .title(place.getName())
+                        .snippet("Destination");
                 dropOffMarker = mMap.addMarker(options);
+
+                dropOffMarker.showInfoWindow();
 
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
