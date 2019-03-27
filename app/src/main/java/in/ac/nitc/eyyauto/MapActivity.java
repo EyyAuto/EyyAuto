@@ -32,11 +32,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -131,14 +133,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void searchBarInit(){                               //also init the custom gps button
-        final TextView txtVw = findViewById(R.id.placeName);
+        //final TextView txtVw = findViewById(R.id.placeName);
 
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         }
 
-        AutocompleteSupportFragment autocompleteFragmentFrom = (AutocompleteSupportFragment)
+        final AutocompleteSupportFragment autocompleteFragmentFrom = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_from);
 
         autocompleteFragmentFrom.setHint("Pickup Location");
@@ -154,7 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         autocompleteFragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                txtVw.setText("From: " + place.getLatLng());
+                //txtVw.setText("From: " + place.getLatLng());
 
                 pickUp = place.getLatLng();
 
@@ -171,7 +173,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             @Override
             public void onError(Status status) {
-                txtVw.setText(status.toString());
+                //txtVw.setText(status.toString());
+                Toast.makeText(MapActivity.this, status.toString(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -190,7 +194,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         autocompleteFragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                txtVw.setText(txtVw.getText()+"\nTo:" + place.getLatLng());
+                //txtVw.setText(txtVw.getText()+"\nTo:" + place.getLatLng());
 
                 dropOff = place.getLatLng();
 
@@ -205,11 +209,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .title(place.getAddress());
                 dropOffMarker = mMap.addMarker(options);
 
-                moveCamera(new LatLng((pickUp.latitude + dropOff.latitude)/2,(pickUp.longitude + dropOff.longitude )/2),11f);
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(pickUp);
+                builder.include(dropOff);
+                LatLngBounds bounds = builder.build();
+                int padding = ((1500 * 10) / 100); // offset from edges of the map in pixels
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
+                        padding);
+                mMap.animateCamera(cu);
+
             }
             @Override
             public void onError(Status status) {
-                txtVw.setText(status.toString());
+                //txtVw.setText(status.toString());
+                Toast.makeText(MapActivity.this, status.toString(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -224,6 +239,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked gps icon");
                 getDeviceLocation();
+
             }
         });
 
