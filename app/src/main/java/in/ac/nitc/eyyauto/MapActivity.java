@@ -38,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -68,6 +69,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
     private User user = null;
+    private LatLng pickUp = new LatLng(11.321458,75.934127);
+    private LatLng dropOff  = new LatLng(11.321458,75.934127);
+    private Marker pickUpMarker = null;
+    private Marker dropOffMarker = null;
+
 
     private DrawerLayout drawerLayout;
 
@@ -98,7 +104,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mMap.getUiSettings().setCompassEnabled(true);
 
         }
@@ -128,18 +134,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final TextView txtVw = findViewById(R.id.placeName);
 
 
-        //initializing the custom gps button
-        mGps = (ImageView) findViewById(R.id.ic_gps);
-        mGps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked gps icon");
-                getDeviceLocation();
-            }
-        });
-
-
-
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         }
@@ -155,29 +149,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         autocompleteFragmentFrom.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
 
+
+
         autocompleteFragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 txtVw.setText("From: " + place.getLatLng());
 
+                pickUp = place.getLatLng();
+
+                if(pickUpMarker!=null)
+                {
+                    pickUpMarker.remove();
+                    pickUpMarker = null;
+                }
+
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
                         .title(place.getAddress());
-                mMap.addMarker(options);
+                pickUpMarker = mMap.addMarker(options);
             }
             @Override
             public void onError(Status status) {
                 txtVw.setText(status.toString());
             }
         });
+
+
+
         AutocompleteSupportFragment autocompleteFragmentTo = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_to);
 
         autocompleteFragmentTo.setHint("Drop-off Location");
         //TODO make these lat.long constants for NITC
         autocompleteFragmentTo.setLocationRestriction(RectangularBounds.newInstance(
-                new LatLng(11.3215791-.05, 75.9336359-.05),
-                new LatLng(11.3215791+.05, 75.9336359+.05)));
+                new LatLng(11.3215791-.15, 75.9336359-.15),
+                new LatLng(11.3215791+.15, 75.9336359+.15)));
 
         autocompleteFragmentTo.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
         autocompleteFragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -185,14 +192,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onPlaceSelected(Place place) {
                 txtVw.setText(txtVw.getText()+"\nTo:" + place.getLatLng());
 
+                dropOff = place.getLatLng();
+
+                if(dropOffMarker != null)
+                {
+                    dropOffMarker.remove();
+                    dropOffMarker = null;
+                }
+
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
                         .title(place.getAddress());
-                mMap.addMarker(options);
+                dropOffMarker = mMap.addMarker(options);
+
+                moveCamera(new LatLng((pickUp.latitude + dropOff.latitude)/2,(pickUp.longitude + dropOff.longitude )/2),11f);
             }
             @Override
             public void onError(Status status) {
                 txtVw.setText(status.toString());
+            }
+        });
+
+
+
+
+
+        //initializing the custom gps button
+        mGps = (ImageView) findViewById(R.id.ic_gps);
+        mGps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: clicked gps icon");
+                getDeviceLocation();
             }
         });
 
@@ -306,6 +337,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+            Toast.makeText(MapActivity.this, "SecurityException: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
