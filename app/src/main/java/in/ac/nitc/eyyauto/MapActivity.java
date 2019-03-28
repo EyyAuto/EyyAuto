@@ -190,8 +190,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         autocompleteFragmentTo.setHint("Drop-off Location");
         //TODO make these lat.long constants for NITC
         autocompleteFragmentTo.setLocationRestriction(RectangularBounds.newInstance(
-                new LatLng(11.3215791-.15, 75.9336359-.15),
-                new LatLng(11.3215791+.15, 75.9336359+.15)));
+                new LatLng(11.3215791-.2, 75.9336359-.2),
+                new LatLng(11.3215791+.2, 75.9336359+.2)));
 
         autocompleteFragmentTo.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
         autocompleteFragmentTo.setOnPlaceSelectedListener(new PlaceSelectionListener() {
