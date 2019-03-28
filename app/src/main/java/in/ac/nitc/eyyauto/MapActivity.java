@@ -37,6 +37,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -173,6 +174,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 pickUpMarker = mMap.addMarker(options);
 
                 pickUpMarker.showInfoWindow();
+
+                moveCameraOverMarkers();
             }
             @Override
             public void onError(Status status) {
@@ -210,20 +213,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
                         .title(place.getName())
-                        .snippet("Destination");
+                        .snippet("Destination")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        .alpha(0.7f);
                 dropOffMarker = mMap.addMarker(options);
 
                 dropOffMarker.showInfoWindow();
 
-
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                builder.include(pickUp);
-                builder.include(dropOff);
-                LatLngBounds bounds = builder.build();
-                int padding = ((1500 * 10) / 100); // offset from edges of the map in pixels
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
-                        padding);
-                mMap.animateCamera(cu);
+                moveCameraOverMarkers();
 
             }
             @Override
@@ -366,6 +363,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    private void moveCameraOverMarkers(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(pickUp);
+        builder.include(dropOff);
+        LatLngBounds bounds = builder.build();
+        int padding = ((1500 * 10) / 100); // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,
+                padding);
+        mMap.animateCamera(cu);
     }
 
 
