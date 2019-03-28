@@ -144,7 +144,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final AutocompleteSupportFragment autocompleteFragmentFrom = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_from);
 
-        autocompleteFragmentFrom.setHint("Pickup Location");
+        autocompleteFragmentFrom.setHint(getString(R.string.pickup_loc));
         //TODO make these lat.long constants for NITC
         autocompleteFragmentFrom.setLocationRestriction(RectangularBounds.newInstance(
                 new LatLng(11.3215791-.05, 75.9336359-.05),
@@ -170,7 +170,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
                         .title(place.getName())
-                        .snippet("Pickup From Here");
+                        .snippet(getString(R.string.pickup_loc));
                 pickUpMarker = mMap.addMarker(options);
 
                 pickUpMarker.showInfoWindow();
@@ -190,7 +190,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AutocompleteSupportFragment autocompleteFragmentTo = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment_to);
 
-        autocompleteFragmentTo.setHint("Drop-off Location");
+        autocompleteFragmentTo.setHint(getString(R.string.drop_loc));
         //TODO make these lat.long constants for NITC
         autocompleteFragmentTo.setLocationRestriction(RectangularBounds.newInstance(
                 new LatLng(11.3215791-.2, 75.9336359-.2),
@@ -213,7 +213,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 MarkerOptions options = new MarkerOptions()
                         .position(place.getLatLng())
                         .title(place.getName())
-                        .snippet("Destination")
+                        .snippet(getString(R.string.drop_loc))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                         .alpha(0.7f);
                 dropOffMarker = mMap.addMarker(options);

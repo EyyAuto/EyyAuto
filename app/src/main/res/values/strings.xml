@@ -12,4 +12,11 @@
 
     <string name="nav_profile">Your Profile</string>
     <string name="nav_map">Book Auto</string>
+
+
+    <string name="pickup_loc">Pickup Location</string>
+    <string name="drop_loc">Drop-off Location</string>
+
+
+
 </resources>
