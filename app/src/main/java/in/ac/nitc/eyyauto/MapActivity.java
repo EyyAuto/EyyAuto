@@ -76,6 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LatLng dropOff  = new LatLng(11.321458,75.934127);
     private Marker pickUpMarker = null;
     private Marker dropOffMarker = null;
+    private Location currentLocation = null;
 
 
     private DrawerLayout drawerLayout;
@@ -243,6 +244,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.d(TAG, "onClick: clicked gps icon");
                 getDeviceLocation();
 
+
+                if(currentLocation!=null){
+
+                    pickUp = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+
+                    if(pickUpMarker!=null)
+                    {
+                        pickUpMarker.remove();
+                        pickUpMarker = null;
+                    }
+
+                    MarkerOptions options = new MarkerOptions()
+                            .position(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()))
+                            .title("My Location")
+                            .snippet(getString(R.string.pickup_loc));
+                    pickUpMarker = mMap.addMarker(options);
+
+                    pickUpMarker.showInfoWindow();
+
+                    moveCameraOverMarkers();
+
+                    autocompleteFragmentFrom.setText("My Location");
+
+                }
+                else{
+                    Log.d(TAG, "onComplete: current location is null gps not enabled");
+                    Toast.makeText(MapActivity.this, "gps not enabled:unable to get current location", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -335,7 +366,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
+                             currentLocation = (Location) task.getResult();
 
                             if(currentLocation!=null){
                                 moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
